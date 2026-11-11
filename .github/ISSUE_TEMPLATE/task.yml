@@ -1,0 +1,17 @@
+name: Task
+description: A unit of work of at most one day
+labels: [task]
+body:
+  - type: input
+    id: uc
+    attributes: {label: Use case / requirement, placeholder: "UC-004, FR-012"}
+    validations: {required: true}
+  - type: textarea
+    id: scope
+    attributes: {label: Scope, description: Files to create or modify and acceptance criteria}
+    validations: {required: true}
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options: [engine, variant, ui, backend, docs, ci]

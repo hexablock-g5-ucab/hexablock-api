@@ -1,0 +1,14 @@
+name: Bug
+description: Behaviour that contradicts a use case
+labels: [bug]
+body:
+  - type: input
+    id: uc
+    attributes: {label: Violated use case, placeholder: UC-004}
+  - type: textarea
+    id: repro
+    attributes: {label: Steps to reproduce (include seed if relevant)}
+    validations: {required: true}
+  - type: textarea
+    id: expected
+    attributes: {label: Expected vs actual}
