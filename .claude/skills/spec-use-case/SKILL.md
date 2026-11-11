@@ -4,7 +4,7 @@ description: Draft or update a system use case (UC-xxx) from a requirement befor
 ---
 # spec-use-case
 
-1. Read `docs/specs/requirements.md`, `docs/specs/entity-model.md` and existing use cases.
+1. Read `docs/specs/requirements.md`, `prisma/schema.prisma`, `schemas/level.schema.json` and existing use cases.
 2. Copy `docs/specs/use-cases/UC-000-template.md` to the next free id.
 3. Fill: overview (goal as an outcome), preconditions, numbered main flow (actor and system
    alternate, observable steps only), alternative flows tied to a step, postconditions (success
