@@ -8,8 +8,8 @@
 
    | Prefix | Use |
    | --- | --- |
-   | `feat/` | new behaviour (`feat/uc-004-sort-cascade`) |
-   | `fix/` | bug fix (`fix/merge-slide-north-west`) |
+   | `feat/` | new behaviour (`feat/uc-101-sync-progress`) |
+   | `fix/` | bug fix (`fix/leaderboard-tie-order`) |
    | `test/` | tests only |
    | `refactor/` | no behaviour change |
    | `docs/` | documentation only |
@@ -39,13 +39,13 @@ Scopes: `auth`, `users`, `progress`, `leaderboard`, `levels`, `api`, `db`, `doma
 Examples:
 
 ```
-feat(engine): add generic HexBoard with axial coordinates
-test(sort): cover cascade tie-breaking by coordinate order
-fix(merge): merge each tile at most once per slide
-docs(readme): document bounded generics
+feat(progress): sync progress per user and gameId
+test(leaderboard): cover ranking ties by submission date
+fix(auth): reject expired refresh tokens
+docs(docs): document the level envelope schema
 ```
 
-Breaking changes: add `!` after the scope (`feat(engine)!: ...`) and a `BREAKING CHANGE:` footer.
+Breaking changes: add `!` after the scope (`feat(levels)!: ...`) and a `BREAKING CHANGE:` footer.
 
 ## Definition of Done
 

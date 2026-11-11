@@ -20,6 +20,7 @@ The `harness/` workflow is adapted from the reference repositories of Group 8 (g
 | ID | Date | Phase / UC | Tool | Task | Files / PR | % AI in PR |
 | --- | --- | --- | --- | --- | --- | --- |
 | [AI-001](docs/ai-log/AI-001.md) | 2026-11-10 | Planning | Claude Opus 5.5 | Analysis of the statement, class-diagram review, architecture and weekly plan | docs/ | 0 (no code) |
+| [AI-002](docs/ai-log/AI-002.md) | 2026-11-11 | P00 bootstrap | Claude Opus 5.5 | Repository audit against the statement and setup fixes | .github/, .claude/, docs/ | 100 (tooling only) |
 
 ## Entry template (copy to `docs/ai-log/AI-xxx.md`)
 

@@ -1,3 +1,4 @@
+# Local PostgreSQL for development and e2e tests. Run the API with `npm run start:dev`.
 services:
   db:
     image: postgres:16
@@ -7,12 +8,5 @@ services:
       POSTGRES_DB: hexablock
     ports: ["5432:5432"]
     volumes: [db-data:/var/lib/postgresql/data]
-  api:
-    build: .
-    env_file: .env
-    environment:
-      DATABASE_URL: postgresql://hexablock:hexablock@db:5432/hexablock?schema=public
-    ports: ["3000:3000"]
-    depends_on: [db]
 volumes:
   db-data:

@@ -5,5 +5,5 @@ model: opus
 ---
 Follow `harness/templates/phase_prompt_template.md` exactly:
 audit, explain, confidence >= 95 %, list files and tests, then WAIT for approval.
-After approval implement only what the UC says, run `npm && npx`, update the handoff,
+After approval implement only what the UC says, run the commands in `harness/rules/validation_protocol.md`, update the handoff,
 phase registry, improvement log and draft the AI log entry. Propose (do not run) the commit message.
