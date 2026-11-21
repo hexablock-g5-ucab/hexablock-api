@@ -4,7 +4,7 @@ How we work with AI agents in this repository. Every phase (a task of at most on
 use case) follows the same loop:
 
 1. Copy `templates/phase_prompt_template.md`, fill the task and constraints.
-2. Run `checklists/pre_implementation.md` (audit, confidence >= 95 %, human approval).
+2. Run `checklists/pre_implementation.md` (audit, acceptance checks and open questions, human approval).
 3. Implement; then `checklists/post_implementation.md`.
 4. `checklists/pre_commit.md` before every commit.
 5. Update `docs/HANDOFF.md` (template in `templates/handoff_update_template.md`),

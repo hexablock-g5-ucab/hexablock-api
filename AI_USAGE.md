@@ -6,14 +6,14 @@ merged: no field may stay "Pending" after merge.
 
 The `harness/` workflow is adapted from the reference repositories of Group 8 (github.com/arjperez-dev/frontend-poc-arrow and backend-poc-arrow), cited per the course integrity policy.
 
-## Tools
+## Tools with recorded use
 
-| Tool | Model / version | Role in our workflow |
-| --- | --- | --- |
-| Claude (claude.ai, Claude Code) | Claude Fable 5.2 | Architecture, generic contracts, hard algorithms, audits before each Friday review |
-| Claude (Claude Code) | Claude Opus 5.5 | Implementing approved use cases inside the harness; writing tests |
-| Claude (Claude Code) | Claude Sonnet 5.5 / Haiku 5.5 | Routine code, translations, docs drafts, commit messages |
-| _add any other tool here (Copilot, ChatGPT, ...)_ | | |
+| Tool and model | Recorded role |
+| --- | --- |
+| Claude Opus 5.5 (as reported in AI-001 and AI-002) | Initial analysis, repository scaffold review and tooling |
+| OpenAI Codex, GPT-6 | Class-model review, documentation and repository preparation |
+
+Record additional tools when they are actually used. If the interface does not identify the exact model, record that fact.
 
 ## Log
 
@@ -21,6 +21,7 @@ The `harness/` workflow is adapted from the reference repositories of Group 8 (g
 | --- | --- | --- | --- | --- | --- | --- |
 | [AI-001](docs/ai-log/AI-001.md) | 2026-11-10 | Planning | Claude Opus 5.5 | Analysis of the statement, class-diagram review, architecture and weekly plan | docs/ | 0 (no code) |
 | [AI-002](docs/ai-log/AI-002.md) | 2026-11-11 | P00 bootstrap | Claude Opus 5.5 | Repository audit against the statement and setup fixes | .github/, .claude/, docs/ | 100 (tooling only) |
+| [AI-003](docs/ai-log/AI-003.md) | 2026-11-20 | Design baseline | OpenAI Codex | Final class model and documentation | [Model](docs/diagrams/README.md) | N/A (documentation) |
 
 ## Entry template (copy to `docs/ai-log/AI-xxx.md`)
 
@@ -36,9 +37,8 @@ The `harness/` workflow is adapted from the reference repositories of Group 8 (g
 - Approximate percentage of AI-assisted code in the PR:
 - Critical reflection:
 
-## Critical evaluation (filled in week 4)
+## Critical evaluation
 
-- Approximate share of AI-assisted code: computed with
-  `git log --grep "AI-Assisted:" --oneline | wc -l` vs `git log --oneline | wc -l`, plus per-PR estimates.
-- Cases where AI produced wrong or sub-optimal results and how we caught them:
-- Impact on productivity and quality:
+Estimate the share of AI-assisted product code at PR review. For each code PR record the affected files, approximate assisted lines and total product lines added or materially changed. Aggregate the numerator and denominator with the same convention. Exclude generated platform files, lockfiles and documentation. Commit trailers identify assisted work but do not measure its volume.
+
+AI-001 and AI-002 contain historical estimates and unfinished human reflections. Confirm those entries with their authors. The overall product-code estimate will be meaningful once reviewed game features land. AI-003 records a concrete design correction and separates the team's input from the assistant's output.

@@ -4,7 +4,7 @@ type: context
 ---
 # Project Baseline
 
-- Product: HexaBlock Suite — four hexagonal puzzle variants (Lines, Fit, Sort, Merge) on ONE generic engine.
+- Product: HexaBlock Suite — three assessed variants (Lines, Sort, Merge) on ONE generic engine.
 - Deadline: Monday 2026-12-14. Reviews with the professor every Friday.
 - Immutable rules: see `AGENTS.md`.
 
