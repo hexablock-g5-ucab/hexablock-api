@@ -1,0 +1,24 @@
+flowchart TB
+  subgraph L4["4 · Frameworks and drivers"]
+    direction TB
+    FW["Nest modules · PostgreSQL · Prisma client"]
+    subgraph L3["3 · Interface adapters"]
+      AD["HTTP controllers · Prisma repositories · password/JWT adapters"]
+      subgraph L2["2 · Application"]
+        UC["SyncProgressUseCase · UpsertLevelUseCase"]
+        PORT["ProgressRepository · LevelRepository"]
+        subgraph L1["1 · Entities"]
+          E["GameProgress · LevelDefinition · ranking policy"]
+        end
+      end
+    end
+  end
+  FW -->|wires| AD
+  AD -->|calls| UC
+  AD -. implements .-> PORT
+  UC -->|uses| PORT
+  UC --> E
+  style L4 fill:#e9f1fa,stroke:#416890
+  style L3 fill:#e2f3ea,stroke:#36724f
+  style L2 fill:#fff4d8,stroke:#8c7028
+  style L1 fill:#f9e6df,stroke:#8e5144

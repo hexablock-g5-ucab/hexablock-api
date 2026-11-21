@@ -1,6 +1,6 @@
 ---
 name: add-variant
-description: Guide for supporting a new game variant in the API without touching controllers or use cases (the defense exercise). Use when asked how the backend handles a fifth variant or a new level format.
+description: Guide for supporting a new game variant in the API without touching controllers or use cases (the defense exercise). Use when asked how the backend handles a new variant or a new level format.
 ---
 # add-variant (backend)
 

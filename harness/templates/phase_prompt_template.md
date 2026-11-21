@@ -10,7 +10,7 @@ Read before starting:
 
 1. Audit every file relevant to this task (read, not just list).
 2. Explain your understanding of the current state and of the use case.
-3. State your confidence. It must be >= 95 %; otherwise ask clarifying questions.
+3. Identify unresolved rules and the acceptance checks that would resolve them.
 4. Propose the list of files to create/modify and the tests (one per flow and rule).
 5. **Wait for explicit approval before writing code.**
 

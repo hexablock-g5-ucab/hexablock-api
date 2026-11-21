@@ -6,8 +6,8 @@ type: rules
 
 | Task | Model | Why |
 | --- | --- | --- |
-| Engine contracts, generic bounds, cross-cutting refactors | Claude Fable 5.2 | Deepest reasoning; mistakes here spread to all four variants |
-| Ambiguous rules turned into specs (Sort cascade, Fit stars) | Claude Fable 5.2 | Finds edge cases before code exists |
+| Engine contracts, generic bounds, cross-cutting refactors | Claude Fable 5.2 | Deepest reasoning; mistakes here spread to all three variants |
+| Ambiguous rules turned into specs (Sort cascade, Merge undo) | Claude Fable 5.2 | Finds edge cases before code exists |
 | Pre-Friday architecture / SOLID audit, defense rehearsal | Claude Fable 5.2 | Independent, demanding reviewer |
 | Implementing an approved UC, writing its tests | Claude Opus 5.5 | Strong and fast inside clear boundaries |
 | Screens, endpoints, mappers, README sections | Claude Sonnet 5.5 | Routine work with a clear pattern |

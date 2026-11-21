@@ -1,46 +1,71 @@
-# HexaBlock Suite — API
+# HexaBlock Suite · REST API
 
-![CI](https://github.com/hexablock-g5-ucab/hexablock-api/actions/workflows/ci.yml/badge.svg)
+![API CI](https://github.com/hexablock-g5-ucab/hexablock-api/actions/workflows/ci.yml/badge.svg)
+![Test suites](https://img.shields.io/badge/tests-Jest%20%7C%20Supertest-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-REST API for HexaBlock Suite: users (JWT), progress per `gameId`, leaderboards and level definitions.
-NestJS + Prisma + PostgreSQL. Client: [hexablock-g5-ucab/hexablock-app](https://github.com/hexablock-g5-ucab/hexablock-app).
+NestJS, Prisma and PostgreSQL form the backend for the [HexaBlock mobile client](https://github.com/hexablock-g5-ucab/hexablock-app). The target API manages accounts, progress, rankings and downloadable Sort levels.
 
-## Architecture
-`src/domain` ← `src/application` (use cases, ports, aspects) ← `src/infrastructure` (Prisma, JWT, bcrypt)
-← `src/interfaces/http` (controllers, DTOs). Nest modules only wire things together.
-![Clean Architecture](docs/diagrams/clean-architecture.png)
+**Development status.** The starter exposes a root route, a Prisma data model and unit/HTTP smoke tests. Authentication, game endpoints, OpenAPI and the first committed migration are implementation milestones. [Assessment scope](docs/specs/requirements.md)
 
-## Generic Engine
-The API does not run the game. Its generic part is the level contract: one envelope for every variant and
-a `spec` section validated per `gameId` ([schemas/level.schema.json](schemas/level.schema.json)).
+## Getting started
 
-## Design Patterns · SOLID Principles · AOP
-_Week 4: real examples with file links. Aspects are use-case decorators (logging, retry, authorization)._
+Use Node.js 24, npm and Docker with Compose. From the API checkout, copy the example environment file, set the local development values, then start the service. On PowerShell:
 
-## Key Endpoints
-Swagger UI at `/api/docs`. Errors follow RFC 9457 (`application/problem+json`).
-
-## Getting Started
-Requirements: Node.js 24 (see `.nvmrc`), Docker (for PostgreSQL).
-
-```bash
-cp .env.example .env
-npm install          # also installs the git hooks (lefthook)
+```powershell
+Copy-Item .env.example .env
+npm install
 docker compose up -d db
-npx prisma migrate dev
 npm run start:dev
 ```
 
-## Running Tests
-```bash
+On macOS or Linux use `cp .env.example .env` for the first step. The [local root route](http://localhost:3000/) runs the starter smoke check. The first database feature should commit the reviewed migration and dependency lockfile before CI switches to `npm ci`.
+
+## Architecture and class model
+
+Application code defines use cases and repository ports. Nest modules wire controllers, credential adapters and Prisma repositories. Adapters translate persistence rows and HTTP DTOs at the boundary.
+
+![Backend layers and inward dependencies](docs/diagrams/clean-architecture.png)
+
+[Editable source](docs/diagrams/clean-architecture.mmd)
+
+![API class model v5](docs/diagrams/05-api.png)
+
+[Editable source](docs/diagrams/05-api.mmd)
+
+[Model decisions and contract checks](docs/diagrams/README.md)
+
+## Generic engine and HTTP contract
+
+The [client engine](https://github.com/hexablock-g5-ucab/hexablock-app) owns game rules. The server keys progress and rankings by game ID, with an optional level filter for Sort. A [level envelope](schemas/level.schema.json) carries schemaVersion, gameId, levelId, order, board and game-specific spec. The existing schema also recognizes historical Fit definitions. Sort is the assessed level catalogue.
+
+| Planned feature | HTTP contract |
+| --- | --- |
+| Accounts | POST /auth/register, POST /auth/login, GET /me |
+| Personal progress | GET and PUT /progress/{gameId} for the authenticated player |
+| Scores and rankings | POST /games/{gameId}/scores, GET /games/{gameId}/leaderboard with optional levelId |
+| Sort level catalogue | GET /games/{gameId}/levels, admin PUT /games/{gameId}/levels/{levelId} |
+| API exploration | Swagger UI at /api/docs when configured |
+
+Progress sync takes the greatest score and stars and the union of completed levels. A published Sort level must retain its board and spec through PostgreSQL. [Progress use case](docs/specs/use-cases/UC-101-sync-progress.md) · [Prisma model](prisma/schema.prisma)
+
+## Design patterns, SOLID and AOP
+
+The [UseCase contract](src/application/use-cases/use-case.ts) and [logging decorator](src/application/aspects/logging.use-case.ts) exist. The decorator times its wrapped use case and propagates results and exceptions. Connecting it to game operations and moving its Nest logger behind a port remain implementation work.
+
+The model separates HTTP mapping from progress merging (SRP), registers level validators by game ID (OCP), preserves use-case behaviour through logging (LSP), splits repository ports by feature (ISP) and injects them into use cases (DIP). Add a code example and test for each principle as the corresponding feature lands.
+
+## Running tests
+
+```sh
 npm run lint
-npm run test
-npm run test:e2e   # needs the database running
+npm test
+npm run test:e2e
+npm run build
 ```
 
-## AI Usage Documentation
-See [AI_USAGE.md](AI_USAGE.md) and [harness/](harness/README.md).
+[CI](.github/workflows/ci.yml) starts PostgreSQL. The starter HTTP test calls the root route. Database-backed tests should cover repeated progress updates, isolation by user and game, authorization for level updates and level publication.
 
-## Contributing · License
-[CONTRIBUTING.md](CONTRIBUTING.md) · MIT
+## AI usage, contributing and license
+
+Record assistance in [AI_USAGE.md](AI_USAGE.md). Follow [CONTRIBUTING.md](CONTRIBUTING.md) for English Conventional Commits and the PR workflow. [MIT license](LICENSE).
