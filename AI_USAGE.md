@@ -12,6 +12,7 @@ The `harness/` workflow is adapted from the reference repositories of Group 8 (g
 | --- | --- |
 | Claude Opus 5.5 (as reported in AI-001 and AI-002) | Initial analysis, repository scaffold review and tooling |
 | OpenAI Codex, GPT-6 | Class-model review, documentation and repository preparation |
+| Gemini (model not shown by the interface) | Review of the v6.1–v6.3 class model (AI-401) |
 
 Record additional tools when they are actually used. If the interface does not identify the exact model, record that fact.
 
@@ -22,6 +23,7 @@ Record additional tools when they are actually used. If the interface does not i
 | [AI-001](docs/ai-log/AI-001.md) | 2026-11-10 | Planning | Claude Opus 5.5 | Analysis of the statement, class-diagram review, architecture and weekly plan | docs/ | 0 (no code) |
 | [AI-002](docs/ai-log/AI-002.md) | 2026-11-11 | P00 bootstrap | Claude Opus 5.5 | Repository audit against the statement and setup fixes | .github/, .claude/, docs/ | 100 (tooling only) |
 | [AI-003](docs/ai-log/AI-003.md) | 2026-11-20 | Design baseline | OpenAI Codex | Final class model and documentation | [Model](docs/diagrams/README.md) | N/A (documentation) |
+| [AI-401](docs/ai-log/AI-401.md) | 2026-11-23 | Design baseline v6.3 | Claude Opus 5.5, reviewed with Gemini | Class model v6.3 and complete README diagram | [Model](docs/diagrams/README.md) | N/A (documentation) |
 
 ## Entry template (copy to `docs/ai-log/AI-xxx.md`)
 

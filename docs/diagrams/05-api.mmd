@@ -1,5 +1,5 @@
 ---
-title: "HexaBlock Suite · Modelo de clases v5 (5/5) — API REST · hexablock-api (NestJS + Prisma)"
+title: "HexaBlock Suite · Modelo de clases v6.3 (5/5) — API REST · hexablock-api (NestJS + Prisma)"
 config:
   layout: elk
   theme: base
@@ -23,21 +23,31 @@ classDiagram
     +userId: string
     +gameId: string
     +bestScore: number
-    +mergeMonotonic(incoming: GameProgress) GameProgress
+    +data: Record‹string, unknown› — datos propios del modelo de progreso del juego
+    +mergeMonotonic(incoming: GameProgress, policy: IProgressMergePolicy) GameProgress
+  }
+  class IProgressMergePolicy {
+    <<interface · Strategy · punto de extensión por gameId>>
+    +merge(stored: Record‹string, unknown›, incoming: Record‹string, unknown›) Record‹string, unknown›
+  }
+  class KeepLatestDataPolicy {
+    <<política por defecto>>
   }
   class LevelProgress {
     +userId: string
     +gameId: string
     +levelId: string
-    +stars: number
     +bestScore: number
     +completedAt: Date?
+    +data: Record‹string, unknown› — por ejemplo estrellas, si una variante las usa
   }
   class ScoreEntry {
     +userId: string
     +gameId: string
     +levelId: string?
     +score: number
+    +moves: number
+    +elapsedMs: number
   }
   class LevelDefinition {
     <<formato genérico>>
@@ -75,24 +85,27 @@ classDiagram
   class RegisterUserUseCase
   class LoginUseCase
   class SyncProgressUseCase {
+    -policies: Map‹string, IProgressMergePolicy› — por gameId; si falta, KeepLatestDataPolicy
     +execute(i: SyncProgressInput) Promise~GameProgress~
   }
   class SubmitScoreUseCase
   class GetLeaderboardUseCase {
+    -strategies: Map‹string, IRankingStrategy› — por gameId; si falta, BestScoreRanking
     +execute(q: LeaderboardQuery) Promise~RankedEntry[]~
   }
   class ReadProgressUseCase
   class ReadProfileUseCase
   class AdminGuard {
     <<guard · escritura de niveles>>
+    +canActivate(ctx) bool — role = ADMIN del usuario autenticado
   }
   class GetLevelsUseCase
   class UpsertLevelUseCase {
-    -validators: Map~string, ILevelSpecValidator~
+    -validators: Map‹string, ILevelSpecValidator›
   }
   class LoggingUseCase~I, O~ {
     <<AOP · Decorator>>
-    -inner: UseCase~I, O~
+    -inner: UseCase‹I, O›
   }
   class LogPort {
     <<interface · puerto>>
@@ -196,9 +209,11 @@ classDiagram
   LoginUseCase --> TokenService
   SyncProgressUseCase --> ProgressRepository
   SyncProgressUseCase ..> GameProgress : mergeMonotonic
+  SyncProgressUseCase o-- "0..*" IProgressMergePolicy
+  KeepLatestDataPolicy ..|> IProgressMergePolicy
   SubmitScoreUseCase --> ScoreRepository
   GetLeaderboardUseCase --> ScoreRepository
-  GetLeaderboardUseCase --> IRankingStrategy
+  GetLeaderboardUseCase o-- "0..*" IRankingStrategy
   GetLevelsUseCase --> LevelRepository
   UpsertLevelUseCase --> LevelRepository
   UpsertLevelUseCase o-- "*" ILevelSpecValidator
@@ -220,6 +235,9 @@ classDiagram
   ReadProfileUseCase --> UserRepository
   LevelsController ..> AdminGuard : PUT
   ProgressController ..> JwtAuthGuard
+  LeaderboardController ..> JwtAuthGuard : POST scores
+  AuthController ..> JwtAuthGuard : GET /me
+  AdminGuard ..> JwtAuthGuard : va después
   AuthController ..> ReadProfileUseCase : GET /me
   ProgressController ..> ReadProgressUseCase : GET
   AuthController --> UseCase : Register / Login
@@ -233,8 +251,11 @@ classDiagram
   FeatureModules ..> PrismaProgressRepository : bind tokens
   FeatureModules ..> LoggingUseCase : envuelve
 
+  note for IRankingStrategy "Una variante que gana por menos tiempo o<br>menos movimientos registra su estrategia para<br>su gameId. ScoreEntry ya trae moves y elapsedMs:<br>GetLeaderboardUseCase no se modifica."
+  note for IProgressMergePolicy "bestScore y niveles completados se fusionan<br>siempre igual (nunca se pierde progreso). La parte<br>propia de cada juego va en data (columna Json en<br>Prisma): una variante nueva no exige migración."
+  note for SortLevelSpecValidator "spec.goal es UNA de dos formas:<br>{type: score, target} o<br>{type: colors, required: {color: n}}.<br>Rechaza niveles sin meta o con las dos."
   note for LevelDefinition "Mismo esquema para toda variante por niveles<br>(schemas/level.schema.json); la sección spec<br>la valida el ILevelSpecValidator de su gameId.<br>Persistir board y spec en la misma operación."
-  note for GameProgress "Fusión monótona: bestScore = máx,<br>estrellas y mejores marcas = máx por nivel,<br>niveles completados = unión. Sincronizar es<br>idempotente y nunca pierde progreso."
+  note for GameProgress "Fusión monótona: bestScore = máx,<br>mejor marca = máx por nivel,<br>niveles completados = unión. Sincronizar es<br>idempotente y nunca pierde progreso."
 
   %% ===================== LEYENDA =====================
   class LEG1["Capa 1 · Entidades (src/domain)"]
@@ -248,11 +269,18 @@ classDiagram
   class LEG4["Capa 4 · Frameworks (Nest modules)"]
 %% layer:framework LEG4
 
-%% layer:domain User GameProgress LevelProgress ScoreEntry LevelDefinition IRankingStrategy BestScoreRanking SortLevelSpecValidator DomainError
-%% layer:extension ILevelSpecValidator
+%% layer:domain KeepLatestDataPolicy User GameProgress LevelProgress ScoreEntry LevelDefinition BestScoreRanking SortLevelSpecValidator DomainError
+%% layer:extension ILevelSpecValidator IProgressMergePolicy IRankingStrategy
 %% layer:application LogPort UseCase RegisterUserUseCase LoginUseCase SyncProgressUseCase SubmitScoreUseCase GetLeaderboardUseCase GetLevelsUseCase UpsertLevelUseCase LoggingUseCase UserRepository ProgressRepository ScoreRepository LevelRepository PasswordHasher TokenService
 %% layer:adapter NestLogAdapter GameIdPipe PrismaService PrismaUserRepository PrismaProgressRepository PrismaScoreRepository PrismaLevelRepository BcryptPasswordHasher JwtTokenService AuthController ProgressController LeaderboardController LevelsController JwtAuthGuard ProblemDetailsFilter
 %% layer:framework FeatureModules
+
+
+%% layer:application ReadProgressUseCase
+
+%% layer:application ReadProfileUseCase
+
+%% layer:adapter AdminGuard
 
   %% ---- colores por capa ----
   style LEG1 fill:#FADBD8,stroke:#B03A2E,color:#1B1B1B
@@ -260,16 +288,19 @@ classDiagram
   style LEG3 fill:#D5F5E3,stroke:#1E8449,color:#1B1B1B
   style LEG5 fill:#FADBD8,stroke:#E67E22,stroke-width:4px,color:#1B1B1B
   style LEG4 fill:#D4E6F1,stroke:#2471A3,color:#1B1B1B
+  style KeepLatestDataPolicy fill:#FADBD8,stroke:#B03A2E,color:#1B1B1B
   style User fill:#FADBD8,stroke:#B03A2E,color:#1B1B1B
   style GameProgress fill:#FADBD8,stroke:#B03A2E,color:#1B1B1B
   style LevelProgress fill:#FADBD8,stroke:#B03A2E,color:#1B1B1B
   style ScoreEntry fill:#FADBD8,stroke:#B03A2E,color:#1B1B1B
   style LevelDefinition fill:#FADBD8,stroke:#B03A2E,color:#1B1B1B
-  style IRankingStrategy fill:#FADBD8,stroke:#B03A2E,color:#1B1B1B
   style BestScoreRanking fill:#FADBD8,stroke:#B03A2E,color:#1B1B1B
   style SortLevelSpecValidator fill:#FADBD8,stroke:#B03A2E,color:#1B1B1B
   style DomainError fill:#FADBD8,stroke:#B03A2E,color:#1B1B1B
   style ILevelSpecValidator fill:#FADBD8,stroke:#E67E22,stroke-width:4px,color:#1B1B1B
+  style IProgressMergePolicy fill:#FADBD8,stroke:#E67E22,stroke-width:4px,color:#1B1B1B
+  style IRankingStrategy fill:#FADBD8,stroke:#E67E22,stroke-width:4px,color:#1B1B1B
+  style LogPort fill:#FCF3CF,stroke:#B7950B,color:#1B1B1B
   style UseCase fill:#FCF3CF,stroke:#B7950B,color:#1B1B1B
   style RegisterUserUseCase fill:#FCF3CF,stroke:#B7950B,color:#1B1B1B
   style LoginUseCase fill:#FCF3CF,stroke:#B7950B,color:#1B1B1B
@@ -279,14 +310,13 @@ classDiagram
   style GetLevelsUseCase fill:#FCF3CF,stroke:#B7950B,color:#1B1B1B
   style UpsertLevelUseCase fill:#FCF3CF,stroke:#B7950B,color:#1B1B1B
   style LoggingUseCase fill:#FCF3CF,stroke:#B7950B,color:#1B1B1B
-  style LogPort fill:#FCF3CF,stroke:#B7950B,color:#1B1B1B
-  style NestLogAdapter fill:#D5F5E3,stroke:#1E8449,color:#1B1B1B
   style UserRepository fill:#FCF3CF,stroke:#B7950B,color:#1B1B1B
   style ProgressRepository fill:#FCF3CF,stroke:#B7950B,color:#1B1B1B
   style ScoreRepository fill:#FCF3CF,stroke:#B7950B,color:#1B1B1B
   style LevelRepository fill:#FCF3CF,stroke:#B7950B,color:#1B1B1B
   style PasswordHasher fill:#FCF3CF,stroke:#B7950B,color:#1B1B1B
   style TokenService fill:#FCF3CF,stroke:#B7950B,color:#1B1B1B
+  style NestLogAdapter fill:#D5F5E3,stroke:#1E8449,color:#1B1B1B
   style GameIdPipe fill:#D5F5E3,stroke:#1E8449,color:#1B1B1B
   style PrismaService fill:#D5F5E3,stroke:#1E8449,color:#1B1B1B
   style PrismaUserRepository fill:#D5F5E3,stroke:#1E8449,color:#1B1B1B
@@ -302,12 +332,6 @@ classDiagram
   style JwtAuthGuard fill:#D5F5E3,stroke:#1E8449,color:#1B1B1B
   style ProblemDetailsFilter fill:#D5F5E3,stroke:#1E8449,color:#1B1B1B
   style FeatureModules fill:#D4E6F1,stroke:#2471A3,color:#1B1B1B
-
-%% layer:application ReadProgressUseCase
   style ReadProgressUseCase fill:#FCF3CF,stroke:#B7950B,color:#1B1B1B
-
-%% layer:application ReadProfileUseCase
   style ReadProfileUseCase fill:#FCF3CF,stroke:#B7950B,color:#1B1B1B
-
-%% layer:adapter AdminGuard
   style AdminGuard fill:#D5F5E3,stroke:#1E8449,color:#1B1B1B

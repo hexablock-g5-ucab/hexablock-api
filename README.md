@@ -29,9 +29,15 @@ Application code defines use cases and repository ports. Nest modules wire contr
 
 [Editable source](docs/diagrams/clean-architecture.mmd)
 
-![API class model v5](docs/diagrams/05-api.png)
+The complete class model of the API in one picture (model v6.3), all four Clean Architecture layers.
+Colours mark the layer: red = Entities (`src/domain`), yellow = Use cases (`src/application`),
+green = Interface adapters (`src/infrastructure`, `src/interfaces/http`), blue = Frameworks (Nest modules).
+An orange border marks an extension point per `gameId`.
 
-[Editable source](docs/diagrams/05-api.mmd)
+[![Class diagram of hexablock-api](docs/diagrams/class-diagram-api.png)](docs/diagrams/class-diagram-api.svg)
+
+Click the image for the zoomable SVG. Source: [`class-diagram-api.mmd`](docs/diagrams/class-diagram-api.mmd).
+The client model lives in [hexablock-app](https://github.com/hexablock-g5-ucab/hexablock-app#class-model).
 
 [Model decisions and contract checks](docs/diagrams/README.md)
 
@@ -47,7 +53,7 @@ The [client engine](https://github.com/hexablock-g5-ucab/hexablock-app) owns gam
 | Sort level catalogue | GET /games/{gameId}/levels, admin PUT /games/{gameId}/levels/{levelId} |
 | API exploration | Swagger UI at /api/docs when configured |
 
-Progress sync takes the greatest score and stars and the union of completed levels. A published Sort level must retain its board and spec through PostgreSQL. [Progress use case](docs/specs/use-cases/UC-101-sync-progress.md) · [Prisma model](prisma/schema.prisma)
+Progress sync keeps the best score and the union of completed levels, and merges each game's own JSON data with a per-game policy. Scores carry moves and elapsed time so each game can rank by its own strategy. A published Sort level must retain its board and spec through PostgreSQL. [Progress use case](docs/specs/use-cases/UC-101-sync-progress.md) · [Prisma model](prisma/schema.prisma)
 
 ## Design patterns, SOLID and AOP
 
