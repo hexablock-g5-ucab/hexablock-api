@@ -1,0 +1,2 @@
+nestjs-best-practices — de https://github.com/Kadajett/agent-nestjs-skills
+Licencia declarada en el SKILL.md: MIT (el repo no trae archivo LICENSE).
