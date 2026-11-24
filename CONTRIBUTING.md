@@ -4,7 +4,7 @@
 
 1. Pick a card from the GitHub Project board (columns: Todo → In progress → In review → Done).
 2. Every behaviour change starts in `docs/specs/use-cases/UC-xxx.md`. Get the spec reviewed first.
-3. Create a short-lived branch from `main`:
+3. Create a short-lived branch from `develop`:
 
    | Prefix | Use |
    | --- | --- |
@@ -14,6 +14,8 @@
    | `refactor/` | no behaviour change |
    | `docs/` | documentation only |
    | `ci/`, `chore/` | tooling |
+
+   Pull requests target `develop`; `main` only receives the release pull request.
 
 4. Keep tasks to one day of work. Commit small and often.
 5. Open a pull request using the template. CI must be green and one teammate must approve.
