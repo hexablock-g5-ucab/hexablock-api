@@ -1,5 +1,10 @@
 # Handoff
 
+## Current design reference
+
+Use the [interactive model and PDF](diagrams/README.md) for UC-101. The design injects LogPort into LoggingUseCase. The current decorator constructs the Nest logger directly.
+
+
 Snapshot of the real state of the repository so any teammate or agent can resume work.
 Updated in the PR that closes each phase (template: `harness/templates/handoff_update_template.md`).
 

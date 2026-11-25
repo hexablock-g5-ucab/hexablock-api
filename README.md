@@ -29,17 +29,11 @@ Application code defines use cases and repository ports. Nest modules wire contr
 
 [Editable source](docs/diagrams/clean-architecture.mmd)
 
-The complete class model of the API in one picture (model v6.3), all four Clean Architecture layers.
-Colours mark the layer: red = Entities (`src/domain`), yellow = Use cases (`src/application`),
-green = Interface adapters (`src/infrastructure`, `src/interfaces/http`), blue = Frameworks (Nest modules).
-An orange border marks an extension point per `gameId`.
+The four-layer design covers 47 classes and 70 relationships. Yellow identifies domain classes, purple application, green interfaces and blue infrastructure.
 
-[![Class diagram of hexablock-api](docs/diagrams/class-diagram-api.png)](docs/diagrams/class-diagram-api.svg)
+[Interactive HTML](docs/diagrams/class-diagram-api.html) · [Vector PDF](docs/diagrams/class-diagram-api.pdf) · [Model guide](docs/diagrams/README.md)
 
-Click the image for the zoomable SVG. Source: [`class-diagram-api.mmd`](docs/diagrams/class-diagram-api.mmd).
-The client model lives in [hexablock-app](https://github.com/hexablock-g5-ucab/hexablock-app#class-model).
-
-[Model decisions and contract checks](docs/diagrams/README.md)
+Download the HTML from GitHub and open it locally to search classes, inspect members and follow relationships. The first PDF page contains the whole model; the following pages index relationships by source class.
 
 ## Generic engine and HTTP contract
 

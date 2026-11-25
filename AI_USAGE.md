@@ -24,6 +24,7 @@ Record additional tools when they are actually used. If the interface does not i
 | [AI-002](docs/ai-log/AI-002.md) | 2026-11-11 | P00 bootstrap | Claude Opus 5.5 | Repository audit against the statement and setup fixes | .github/, .claude/, docs/ | 100 (tooling only) |
 | [AI-003](docs/ai-log/AI-003.md) | 2026-11-20 | Design baseline | OpenAI Codex | Final class model and documentation | [Model](docs/diagrams/README.md) | N/A (documentation) |
 | [AI-004](docs/ai-log/AI-004.md) | 2026-11-23 | Design baseline v6.3 | Claude Opus 5.5, reviewed with Gemini | Class model v6.3 and complete README diagram | [Model](docs/diagrams/README.md) | N/A (documentation) |
+| [AI-006](docs/ai-log/AI-006.md) | 2026-11-25 | Design / UC-101 | OpenAI Codex (GPT-6) | Publish the layered class model | [Model](docs/diagrams/README.md) | N/A (documentation) |
 
 ## Entry template (copy to `docs/ai-log/AI-xxx.md`)
 
