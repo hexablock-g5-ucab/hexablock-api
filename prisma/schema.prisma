@@ -39,8 +39,8 @@ model LevelProgress {
   userId      String
   gameId      String
   levelId     String
-  stars       Int       @default(0)
   bestScore   Int       @default(0)
+  data        Json      @default("{}")
   completedAt DateTime?
   user        User      @relation(fields: [userId], references: [id])
 
@@ -53,6 +53,8 @@ model Score {
   gameId    String
   levelId   String?
   score     Int
+  moves     Int
+  elapsedMs Int
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
 
@@ -60,13 +62,15 @@ model Score {
 }
 
 model Level {
-  gameId     String
-  levelId    String
-  version    Int      @default(1)
-  sortOrder  Int
-  difficulty String
-  spec       Json
-  updatedAt  DateTime @updatedAt
+  gameId        String
+  levelId       String
+  version       Int      @default(1)
+  schemaVersion Int      @default(1)
+  sortOrder     Int
+  difficulty    String?
+  board         Json
+  spec          Json
+  updatedAt     DateTime @updatedAt
 
   @@id([gameId, levelId])
 }
