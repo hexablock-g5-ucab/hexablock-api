@@ -19,6 +19,7 @@ const SPEC_DESCRIPTION =
 /**
  * Level envelope the admin publishes. gameId and levelId come from the path;
  * they may also appear in the body so a level read back can be sent unchanged.
+ * For the same reason the body may carry `version`, which the server ignores.
  */
 export class UpsertLevelRequestDto {
   @ApiPropertyOptional({
@@ -43,6 +44,17 @@ export class UpsertLevelRequestDto {
   @IsInt()
   @Min(1)
   schemaVersion: number;
+
+  @ApiPropertyOptional({
+    minimum: 1,
+    example: 1,
+    description:
+      'Optional and ignored; the content revision is managed by the server',
+  })
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  version?: number;
 
   @ApiProperty({ minimum: 1, example: 1, description: 'Position in the list' })
   @IsInt()
