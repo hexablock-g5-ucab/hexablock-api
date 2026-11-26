@@ -6,6 +6,9 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { MaxUtf8Bytes } from '../validators/max-utf8-bytes.validator';
+
+export const PASSWORD_MAX_BYTES = 72;
 
 export class RegisterRequestDto {
   @ApiProperty({ example: 'player@example.com', maxLength: 254 })
@@ -14,10 +17,17 @@ export class RegisterRequestDto {
   email: string;
 
   /** bcrypt only uses the first 72 bytes, so longer passwords are rejected. */
-  @ApiProperty({ minLength: 8, maxLength: 72, format: 'password' })
+  @ApiProperty({
+    minLength: 8,
+    format: 'password',
+    description:
+      'At least 8 characters and at most 72 bytes when UTF-8 encoded ' +
+      '(bcrypt limit): 72 ASCII characters, but fewer if it uses accents ' +
+      'or emoji.',
+  })
   @IsString()
   @MinLength(8)
-  @MaxLength(72)
+  @MaxUtf8Bytes(PASSWORD_MAX_BYTES)
   password: string;
 
   @ApiProperty({ example: 'Daniel', minLength: 1, maxLength: 50 })
