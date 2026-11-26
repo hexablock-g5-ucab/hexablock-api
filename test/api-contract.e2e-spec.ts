@@ -4,6 +4,7 @@ import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from './../src/app.module';
 import { configureApp } from './../src/app.setup';
+import { LevelDefinitionResponseDto } from './../src/interfaces/http/levels/levels.dto';
 
 type Method = 'get' | 'post' | 'put';
 
@@ -149,7 +150,7 @@ describe('API contract v6.3 (e2e)', () => {
   });
 
   it('should_return_501_when_level_envelope_matches_the_path', async () => {
-    // Arrange: the full envelope, as GET /levels returns it
+    // Arrange: the envelope ids repeated in the body
     const envelope = {
       ...VALID_LEVEL,
       gameId: 'hexa-sort',
@@ -160,6 +161,29 @@ describe('API contract v6.3 (e2e)', () => {
     const res = await request(app.getHttpServer())
       .put('/games/hexa-sort/levels/sort-001')
       .send(envelope);
+
+    // Assert
+    expect(res.status).toBe(501);
+    expect(res.headers['content-type']).toMatch(PROBLEM_JSON);
+  });
+
+  it('should_return_501_when_level_read_back_is_sent_unchanged', async () => {
+    // Arrange: a body shaped exactly like the GET /levels response item
+    const levelReadBack: Required<LevelDefinitionResponseDto> = {
+      gameId: 'hexa-sort',
+      levelId: 'sort-001',
+      schemaVersion: 1,
+      version: 3,
+      order: 1,
+      difficulty: 'easy',
+      board: { shape: 'hexagon', radius: 3 },
+      spec: { goal: { type: 'score', target: 500 } },
+    };
+
+    // Act
+    const res = await request(app.getHttpServer())
+      .put('/games/hexa-sort/levels/sort-001')
+      .send(levelReadBack);
 
     // Assert
     expect(res.status).toBe(501);
