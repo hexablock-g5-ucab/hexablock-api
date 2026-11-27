@@ -2,48 +2,38 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://hexablock.local/schemas/level.schema.json",
   "title": "HexaBlock level definition",
+  "description": "Class model v6.3. Shared envelope for every level-based variant; the spec section is validated per gameId (ILevelSpecValidator). Hexa Sort is the only level-based variant.",
   "type": "object",
-  "required": [
-    "schemaVersion",
-    "gameId",
-    "levelId",
-    "order",
-    "board",
-    "spec"
-  ],
+  "required": ["schemaVersion", "gameId", "levelId", "order", "board", "spec"],
   "properties": {
     "schemaVersion": {
+      "description": "Wire format version.",
       "const": 1
     },
+    "version": {
+      "description": "Content revision, managed by the server. Ignored when publishing.",
+      "type": "integer",
+      "minimum": 1
+    },
     "gameId": {
-      "enum": [
-        "hexa-fit",
-        "hexa-sort"
-      ]
+      "enum": ["hexa-sort"]
     },
     "levelId": {
       "type": "string",
-      "pattern": "^(fit|sort)-[0-9]{3}$"
+      "pattern": "^sort-[0-9]{3}$"
     },
     "order": {
       "type": "integer",
       "minimum": 1
     },
     "difficulty": {
-      "enum": [
-        "easy",
-        "medium",
-        "hard"
-      ]
+      "enum": ["easy", "medium", "hard"]
     },
     "board": {
       "oneOf": [
         {
           "type": "object",
-          "required": [
-            "shape",
-            "radius"
-          ],
+          "required": ["shape", "radius"],
           "properties": {
             "shape": {
               "const": "hexagon"
@@ -56,10 +46,7 @@
         },
         {
           "type": "object",
-          "required": [
-            "shape",
-            "cells"
-          ],
+          "required": ["shape", "cells"],
           "properties": {
             "shape": {
               "const": "custom"
@@ -80,53 +67,6 @@
       "if": {
         "properties": {
           "gameId": {
-            "const": "hexa-fit"
-          }
-        }
-      },
-      "then": {
-        "properties": {
-          "spec": {
-            "required": [
-              "pieces",
-              "stars"
-            ],
-            "properties": {
-              "pieces": {
-                "type": "array",
-                "minItems": 1,
-                "items": {
-                  "type": "object",
-                  "required": [
-                    "id",
-                    "cells"
-                  ],
-                  "properties": {
-                    "id": {
-                      "type": "integer"
-                    },
-                    "cells": {
-                      "$ref": "#/$defs/cells"
-                    }
-                  }
-                }
-              },
-              "stars": {
-                "type": "object",
-                "required": [
-                  "maxMovesFor3",
-                  "secondsFor3"
-                ]
-              }
-            }
-          }
-        }
-      }
-    },
-    {
-      "if": {
-        "properties": {
-          "gameId": {
             "const": "hexa-sort"
           }
         }
@@ -134,15 +74,17 @@
       "then": {
         "properties": {
           "spec": {
-            "required": [
-              "goals",
-              "colors",
-              "seed"
-            ],
+            "required": ["goal", "colors", "seed"],
             "properties": {
-              "goals": {
-                "type": "integer",
-                "minimum": 1
+              "goal": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/scoreGoal"
+                  },
+                  {
+                    "$ref": "#/$defs/colorsGoal"
+                  }
+                ]
               },
               "colors": {
                 "type": "array",
@@ -177,6 +119,38 @@
         "minItems": 2,
         "maxItems": 2
       }
+    },
+    "scoreGoal": {
+      "type": "object",
+      "required": ["type", "target"],
+      "properties": {
+        "type": {
+          "const": "score"
+        },
+        "target": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "colorsGoal": {
+      "type": "object",
+      "required": ["type", "required"],
+      "properties": {
+        "type": {
+          "const": "colors"
+        },
+        "required": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      },
+      "additionalProperties": false
     }
   }
 }
