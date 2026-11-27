@@ -31,7 +31,9 @@ Application code defines use cases and repository ports. Nest modules wire contr
 
 The four-layer design covers 47 classes and 70 relationships. Yellow identifies domain classes, purple application, green interfaces and blue infrastructure.
 
-[Interactive HTML](docs/diagrams/class-diagram-api.html) · [Vector PDF](docs/diagrams/class-diagram-api.pdf) · [Model guide](docs/diagrams/README.md)
+[![Class diagram detail. Open the full PDF](docs/diagrams/class-diagram-api-preview.png)](docs/diagrams/class-diagram-api.pdf)
+
+**[Open the complete class diagram (PDF)](docs/diagrams/class-diagram-api.pdf)** · [Interactive HTML](docs/diagrams/class-diagram-api.html) · [Model guide](docs/diagrams/README.md)
 
 Download the HTML from GitHub and open it locally to search classes, inspect members and follow relationships. The first PDF page contains the whole model; the following pages index relationships by source class.
 
