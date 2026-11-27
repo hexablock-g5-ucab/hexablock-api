@@ -1,27 +1,32 @@
-import { Logger } from '@nestjs/common';
+import type { LogOutcome, LogPort } from '../ports/log.port';
 import type { UseCase } from '../use-cases/use-case';
 
-/** AOP aspect without libraries: logs entry, exit and duration of any use case. */
+/** Supply a fixed operation name independent of player data. */
 export class LoggingUseCase<I, O> implements UseCase<I, O> {
-  private readonly logger: Logger;
-
   constructor(
     private readonly inner: UseCase<I, O>,
     private readonly name: string,
-  ) {
-    this.logger = new Logger(name);
-  }
+    private readonly logger: LogPort,
+  ) {}
 
   async execute(input: I): Promise<O> {
-    const started = Date.now();
-    this.logger.log(`-> ${this.name}`);
+    const started = performance.now();
+    this.record('started', 0);
     try {
       const output = await this.inner.execute(input);
-      this.logger.log(`<- ${this.name} ${Date.now() - started} ms`);
+      this.record('succeeded', performance.now() - started);
       return output;
     } catch (error) {
-      this.logger.error(`x ${this.name}`, error as Error);
+      this.record('failed', performance.now() - started);
       throw error;
+    }
+  }
+
+  private record(outcome: LogOutcome, elapsed: number): void {
+    try {
+      this.logger.record(this.name, outcome, Math.round(elapsed));
+    } catch {
+      // Diagnostics must preserve the original operation outcome.
     }
   }
 }

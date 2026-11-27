@@ -61,6 +61,8 @@ The [UseCase contract](src/application/use-cases/use-case.ts) and [logging decor
 
 The model separates HTTP mapping from progress merging (SRP), registers level validators by game ID (OCP), preserves use-case behaviour through logging (LSP), splits repository ports by feature (ISP) and injects them into use cases (DIP). Add a code example and test for each principle as the corresponding feature lands.
 
+When composing a traced use case, pass its operation, fixed name and a `NestLogAdapter` to `LoggingUseCase`. The port records operation, outcome and elapsed milliseconds.
+
 ## Running tests
 
 ```sh
