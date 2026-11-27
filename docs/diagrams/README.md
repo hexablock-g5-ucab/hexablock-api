@@ -1,18 +1,14 @@
-# API class model v6.3
+# API class model
 
-The model is frozen at v6.3.
+The four-layer design covers 47 classes and 70 relationships. Yellow identifies domain classes, purple application, green interfaces and blue infrastructure.
 
-- **Complete API model:** [Image](class-diagram-api.png) · [Zoomable SVG](class-diagram-api.svg) · [Editable source](class-diagram-api.mmd)
-- **REST API view:** [Image](05-api.png) · [Editable source](05-api.mmd). It has the same content as the complete model, because the backend has always been a single view.
-- **Clean Architecture:** [Image](clean-architecture.png) · [Editable source](clean-architecture.mmd)
+[Interactive HTML](class-diagram-api.html) · [Vector PDF](class-diagram-api.pdf)
 
-The client model lives in [hexablock-app](https://github.com/hexablock-g5-ucab/hexablock-app/blob/develop/docs/diagrams/README.md).
+Download the HTML from GitHub and open it locally to search classes, inspect members and follow relationships. The first PDF page contains the whole model; the following pages index relationships by source class.
 
-## Reading the model
+[Companion app model](https://github.com/hexablock-g5-ucab/hexablock-app/blob/develop/docs/diagrams/README.md)
 
-**Colours**
-- Colours mark the Clean Architecture layer: red for Entities, yellow for Use cases, green for Interface adapters and blue for Nest wiring.
-- An orange border marks an extension point. Each extension point is chosen per `gameId`, so a new game registers its own implementation and no existing use case changes.
+## Design contracts
 
 **Identity and authorization**
 - The user ID comes from the verified identity, never from the request body.
@@ -43,13 +39,3 @@ The client model lives in [hexablock-app](https://github.com/hexablock-g5-ucab/h
 **Validation and logging**
 - Game IDs are validated on the progress, score and ranking routes. Level routes also require a registered level-based variant.
 - `LoggingUseCase` wraps a use case and receives a logger port. Inputs with credentials or personal data stay out of the logs.
-
-## Regenerating
-
-After editing the model, regenerate from this directory:
-
-```sh
-mmdc -i class-diagram-api.mmd -o class-diagram-api.svg -b white
-mmdc -i class-diagram-api.mmd -o class-diagram-api.png -w 5700 -s 1.5 -b white
-mmdc -i 05-api.mmd -o 05-api.png -w 2400 -s 2 -b white
-```

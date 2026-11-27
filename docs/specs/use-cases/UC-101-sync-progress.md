@@ -11,9 +11,9 @@
 - The request carries a valid JWT.
 
 ## Main success scenario
-1. Client sends `PUT /progress/{gameId}` with best score, stars per level and completed levels.
+1. Client sends `PUT /progress/{gameId}` with best score, best score per level and completed levels.
 2. System validates the gameId and the body.
-3. System merges with stored progress: best score = max, stars per level = max, completed = union.
+3. System merges with stored progress: best score = max, best score per level = max, completed = union.
 4. System returns the merged progress.
 
 ## Alternative flows
@@ -21,7 +21,7 @@
 - **A2 (precondition):** missing or expired JWT → 401 problem+json.
 
 ## Postconditions
-- Success: stored progress is never lower than before for any field.
+- Success: stored progress is never lower than before for monotonic scores and completed levels.
 - Failure: stored progress unchanged.
 
 ## Business rules

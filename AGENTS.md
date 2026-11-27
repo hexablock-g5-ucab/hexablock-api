@@ -2,7 +2,7 @@
 
 ## Start here
 
-Read the [assessed scope](docs/specs/requirements.md), the relevant use case under `docs/specs/use-cases/` and the [v6.3 class model](docs/diagrams/README.md). The model is frozen: changes are proposed in a PR, not made silently. The team confirmed the professor removed Hexa Fit. Deliver Lines, Sort and Merge. Treat the model as the design baseline and the implementation and tests as evidence of current behaviour.
+Read the [assessed scope](docs/specs/requirements.md), the relevant use case under `docs/specs/use-cases/` and the [layered class model](docs/diagrams/README.md). The model is frozen: changes are proposed in a PR, not made silently. The team confirmed the professor removed Hexa Fit. Deliver Lines, Sort and Merge. Treat the model as the design baseline and the implementation and tests as evidence of current behaviour.
 
 ## Architecture
 
